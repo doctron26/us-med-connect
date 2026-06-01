@@ -122,6 +122,24 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  button,
+  .btn {
+    cursor: pointer;
+    transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s, background-color .25s, color .25s, opacity .25s, filter .25s;
+  }
+
+  button:hover:not(:disabled),
+  .btn:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 24px -10px color-mix(in oklab, var(--teal) 35%, transparent);
+    filter: brightness(1.05);
+  }
+
+  button:active:not(:disabled),
+  .btn:active:not(:disabled) {
+    transform: translateY(0px) scale(0.97);
+  }
+
   h1,
   h2,
   h3,
@@ -199,12 +217,17 @@
   }
 
   .hover-lift {
-    transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s;
+    transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s, filter .35s;
   }
 
   .hover-lift:hover {
-    transform: translateY(-6px);
+    transform: translateY(-4px) scale(1.02);
     box-shadow: var(--shadow-elegant);
+    filter: brightness(1.05);
+  }
+
+  .hover-lift:active {
+    transform: translateY(0px) scale(0.97);
   }
 }
 
@@ -296,6 +319,17 @@
   }
 }
 
+@keyframes button-glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px 0px color-mix(in oklab, var(--teal) 25%, transparent);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 30px 4px color-mix(in oklab, var(--teal) 65%, transparent);
+    transform: scale(1.03);
+  }
+}
+
 @keyframes flow-line {
   0% { background-position: 0% 50%; }
   100% { background-position: 200% 50%; }
@@ -356,6 +390,12 @@
     will-change: transform, opacity;
     transform: translateZ(0);
   }
+
+  .animate-btn-glow {
+    animation: button-glow-pulse 2.2s ease-in-out infinite;
+    will-change: transform, box-shadow;
+  }
+
 
   .reveal {
     opacity: 0;

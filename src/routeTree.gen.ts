@@ -9,14 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PartnershipsRouteImport } from './routes/partnerships'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PartnershipsIndexRouteImport } from './routes/partnerships.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as PartnershipsApplyRouteImport } from './routes/partnerships.apply'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminAuthenticatedRouteImport } from './routes/admin/_authenticated'
 import { Route as AdminAuthenticatedPricingRouteImport } from './routes/admin/_authenticated/pricing'
 import { Route as AdminAuthenticatedDashboardRouteImport } from './routes/admin/_authenticated/dashboard'
 
+const PartnershipsRoute = PartnershipsRouteImport.update({
+  id: '/partnerships',
+  path: '/partnerships',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -27,10 +35,20 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PartnershipsIndexRoute = PartnershipsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PartnershipsRoute,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
+} as any)
+const PartnershipsApplyRoute = PartnershipsApplyRouteImport.update({
+  id: '/apply',
+  path: '/apply',
+  getParentRoute: () => PartnershipsRoute,
 } as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
@@ -57,8 +75,11 @@ const AdminAuthenticatedDashboardRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/partnerships': typeof PartnershipsRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/partnerships/apply': typeof PartnershipsApplyRoute
   '/admin/': typeof AdminIndexRoute
+  '/partnerships/': typeof PartnershipsIndexRoute
   '/admin/dashboard': typeof AdminAuthenticatedDashboardRoute
   '/admin/pricing': typeof AdminAuthenticatedPricingRoute
 }
@@ -66,6 +87,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminIndexRoute
   '/admin/login': typeof AdminLoginRoute
+  '/partnerships/apply': typeof PartnershipsApplyRoute
+  '/partnerships': typeof PartnershipsIndexRoute
   '/admin/dashboard': typeof AdminAuthenticatedDashboardRoute
   '/admin/pricing': typeof AdminAuthenticatedPricingRoute
 }
@@ -73,9 +96,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/partnerships': typeof PartnershipsRouteWithChildren
   '/admin/_authenticated': typeof AdminAuthenticatedRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/partnerships/apply': typeof PartnershipsApplyRoute
   '/admin/': typeof AdminIndexRoute
+  '/partnerships/': typeof PartnershipsIndexRoute
   '/admin/_authenticated/dashboard': typeof AdminAuthenticatedDashboardRoute
   '/admin/_authenticated/pricing': typeof AdminAuthenticatedPricingRoute
 }
@@ -84,19 +110,32 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/partnerships'
     | '/admin/login'
+    | '/partnerships/apply'
     | '/admin/'
+    | '/partnerships/'
     | '/admin/dashboard'
     | '/admin/pricing'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/admin/login' | '/admin/dashboard' | '/admin/pricing'
+  to:
+    | '/'
+    | '/admin'
+    | '/admin/login'
+    | '/partnerships/apply'
+    | '/partnerships'
+    | '/admin/dashboard'
+    | '/admin/pricing'
   id:
     | '__root__'
     | '/'
     | '/admin'
+    | '/partnerships'
     | '/admin/_authenticated'
     | '/admin/login'
+    | '/partnerships/apply'
     | '/admin/'
+    | '/partnerships/'
     | '/admin/_authenticated/dashboard'
     | '/admin/_authenticated/pricing'
   fileRoutesById: FileRoutesById
@@ -104,10 +143,18 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  PartnershipsRoute: typeof PartnershipsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/partnerships': {
+      id: '/partnerships'
+      path: '/partnerships'
+      fullPath: '/partnerships'
+      preLoaderRoute: typeof PartnershipsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin': {
       id: '/admin'
       path: '/admin'
@@ -122,12 +169,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/partnerships/': {
+      id: '/partnerships/'
+      path: '/'
+      fullPath: '/partnerships/'
+      preLoaderRoute: typeof PartnershipsIndexRouteImport
+      parentRoute: typeof PartnershipsRoute
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/partnerships/apply': {
+      id: '/partnerships/apply'
+      path: '/apply'
+      fullPath: '/partnerships/apply'
+      preLoaderRoute: typeof PartnershipsApplyRouteImport
+      parentRoute: typeof PartnershipsRoute
     }
     '/admin/login': {
       id: '/admin/login'
@@ -187,9 +248,24 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface PartnershipsRouteChildren {
+  PartnershipsApplyRoute: typeof PartnershipsApplyRoute
+  PartnershipsIndexRoute: typeof PartnershipsIndexRoute
+}
+
+const PartnershipsRouteChildren: PartnershipsRouteChildren = {
+  PartnershipsApplyRoute: PartnershipsApplyRoute,
+  PartnershipsIndexRoute: PartnershipsIndexRoute,
+}
+
+const PartnershipsRouteWithChildren = PartnershipsRoute._addFileChildren(
+  PartnershipsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  PartnershipsRoute: PartnershipsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

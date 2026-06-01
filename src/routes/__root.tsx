@@ -72,14 +72,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "USAMedTravel — U.S. Medical Second Opinions & Healthcare Navigation" },
+      { name: "description", content: "Access leading U.S. and global medical specialists, clinical second opinions, and cross-border healthcare coordination." },
+      { name: "author", content: "USAMedTravel" },
+      { property: "og:title", content: "USAMedTravel — U.S. Medical Second Opinions" },
+      { property: "og:description", content: "Access leading U.S. and global medical specialists, clinical second opinions, and cross-border healthcare coordination." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@USAMedTravel" },
     ],
     links: [
       {

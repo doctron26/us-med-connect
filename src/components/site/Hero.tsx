@@ -1,4 +1,5 @@
 import { Upload, Stethoscope, MessageCircle, ShieldCheck, Lock, Globe2, Zap } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import heroImg from "@/assets/hero-medical-ai.jpg";
 
 const badges = [
@@ -39,7 +40,7 @@ export function Hero() {
             & Treatment Navigation
           </h1>
 
-          <p className="text-lg text-white/80 max-w-xl leading-relaxed">
+          <p className="text-lg text-white/85 max-w-xl leading-relaxed">
             Connect with America's top specialists, leading hospitals, and AI-assisted healthcare
             intelligence — from anywhere in the world.
           </p>
@@ -66,6 +67,7 @@ export function Hero() {
               <MessageCircle className="size-4" /> WhatsApp Us
             </a>
           </div>
+
 
           <div className="flex flex-wrap gap-2 pt-3">
             {chips.map((c) => (

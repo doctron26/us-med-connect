@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { Upload, Menu, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 const links = [
-  { href: "#home", label: "Home" },
-  { href: "#about", label: "About" },
-  { href: "#services", label: "Services" },
-  { href: "#specialities", label: "Specialities" },
-  { href: "#hospitals", label: "Hospitals" },
-  { href: "#how", label: "How It Works" },
-  { href: "#testimonials", label: "Testimonials" },
-  { href: "#faq", label: "FAQ" },
-  { href: "#contact", label: "Contact" },
+  { href: "/#home", label: "Home", isRouter: false },
+  { href: "/#about", label: "About", isRouter: false },
+  { href: "/#services", label: "Services", isRouter: false },
+  { href: "/#specialities", label: "Specialities", isRouter: false },
+  { href: "/#hospitals", label: "Hospitals", isRouter: false },
+  { href: "/#how", label: "How It Works", isRouter: false },
+  { href: "/partnerships", label: "Partnerships", isRouter: true },
+  { href: "/#contact", label: "Contact", isRouter: false },
 ];
 
 export function Header() {
@@ -31,32 +31,44 @@ export function Header() {
       }`}
     >
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
-        <a href="#home" className="flex items-center gap-2 font-display font-bold text-lg">
+        <Link to="/" className="flex items-center gap-2 font-display font-bold text-lg">
           <span className="size-8 rounded-xl gradient-sky flex items-center justify-center text-white shadow-glow">
             <span className="text-sm">✚</span>
           </span>
           <span className={scrolled ? "text-navy-deep" : "text-white"}>
             USA<span className="text-gradient">MedTravel</span>
           </span>
-        </a>
+        </Link>
 
-        <nav className="hidden lg:flex items-center gap-7 text-sm font-medium">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className={`relative py-1.5 transition-all after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-gradient-to-r after:from-sky after:to-teal after:transition-all after:duration-300 hover:after:w-full ${
-                scrolled ? "text-foreground/85 hover:text-navy-deep" : "text-white/85 hover:text-white"
-              }`}
-            >
-              {l.label}
-            </a>
-          ))}
+        <nav className="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-medium">
+          {links.map((l) =>
+            l.isRouter ? (
+              <Link
+                key={l.href}
+                to={l.href}
+                className={`relative py-1.5 transition-all after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-gradient-to-r after:from-sky after:to-teal after:transition-all after:duration-300 hover:after:w-full ${
+                  scrolled ? "text-foreground/85 hover:text-navy-deep" : "text-white/85 hover:text-white"
+                }`}
+              >
+                {l.label}
+              </Link>
+            ) : (
+              <a
+                key={l.href}
+                href={l.href}
+                className={`relative py-1.5 transition-all after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-gradient-to-r after:from-sky after:to-teal after:transition-all after:duration-300 hover:after:w-full ${
+                  scrolled ? "text-foreground/85 hover:text-navy-deep" : "text-white/85 hover:text-white"
+                }`}
+              >
+                {l.label}
+              </a>
+            )
+          )}
         </nav>
 
         <div className="hidden lg:flex items-center gap-3">
           <a
-            href="#contact"
+            href="/#contact"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full gradient-sky text-white text-sm font-semibold shadow-glow hover-lift"
           >
             <Upload className="size-4" /> Upload Reports
@@ -74,18 +86,30 @@ export function Header() {
 
       {open && (
         <div className="lg:hidden glass border-t border-white/10 px-6 py-4 space-y-2 animate-fade-up">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              className="block py-2 text-foreground/80 hover:text-navy-deep"
-            >
-              {l.label}
-            </a>
-          ))}
+          {links.map((l) =>
+            l.isRouter ? (
+              <Link
+                key={l.href}
+                to={l.href}
+                onClick={() => setOpen(false)}
+                className="block py-2 text-foreground/80 hover:text-navy-deep"
+              >
+                {l.label}
+              </Link>
+            ) : (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className="block py-2 text-foreground/80 hover:text-navy-deep"
+              >
+                {l.label}
+              </a>
+            )
+          )}
           <a
-            href="#contact"
+            href="/#contact"
+            onClick={() => setOpen(false)}
             className="mt-2 inline-flex w-full justify-center items-center gap-2 px-4 py-2.5 rounded-full gradient-sky text-white text-sm font-semibold"
           >
             <Upload className="size-4" /> Upload Reports
