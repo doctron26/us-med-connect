@@ -20,7 +20,7 @@ create table if not exists public.admin_users (
 -- We filter by email in the code ( .eq('email', user.email) ), so this is secure.
 alter table public.admin_users enable row level security;
 
-drop policy if exists "Admin users can read their own row" on public.admin_users;
+drop policy if exists "Authenticated users can read admin_users" on public.admin_users;
 
 create policy "Authenticated users can read admin_users"
   on public.admin_users for select
@@ -53,10 +53,12 @@ on conflict (id) do nothing;
 -- RLS on pricing_plans: public READ, admin-only WRITE
 alter table public.pricing_plans enable row level security;
 
+drop policy if exists "Anyone can read pricing" on public.pricing_plans;
 create policy "Anyone can read pricing"
   on public.pricing_plans for select
   using (true);
 
+drop policy if exists "Admin can update pricing" on public.pricing_plans;
 create policy "Admin can update pricing"
   on public.pricing_plans for update
   using (
