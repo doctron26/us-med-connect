@@ -77,7 +77,11 @@ async function main() {
     <title>US Med Connect</title>
     <meta name="description" content="US Med Connect - Your trusted platform for US medical travel connections" />
     <link rel="icon" type="image/png" href="/logo.png" />
-    <meta property="og:image" content="/logo.png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <meta property="og:image" content="https://www.usamedtravel.com/logo.png" />
+    <meta property="og:url" content="https://www.usamedtravel.com/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://www.usamedtravel.com/logo.png" />
     ${cssHref ? `<link rel="stylesheet" crossorigin href="${cssHref}">` : ""}
     <link rel="modulepreload" crossorigin href="${clientEntry}">
   </head>

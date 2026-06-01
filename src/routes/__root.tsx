@@ -82,7 +82,11 @@ function RootComponent() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>US Med Connect</title>
         <link rel="icon" type="image/png" href="/logo.png" />
-        <meta property="og:image" content="/logo.png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
+        <meta property="og:image" content="https://www.usamedtravel.com/logo.png" />
+        <meta property="og:url" content="https://www.usamedtravel.com/" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://www.usamedtravel.com/logo.png" />
         <HeadContent />
       </head>
       <body>
