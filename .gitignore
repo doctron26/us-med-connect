@@ -36,3 +36,6 @@ dist-ssr
 *.zip
 dist-static/
 hostinger-static-deploy/
+
+# Vercel Build Outputs
+.vercel/
