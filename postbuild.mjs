@@ -59,9 +59,9 @@ async function main() {
   const clientEntry = await findClientEntry();
 
   // ── 2. Find the CSS bundle ──────────────────────────────────────────────────
-  const cssFile = assetsFiles.find((f) => f.endsWith(".css") && f.startsWith("styles-"));
+  const cssFile = assetsFiles.find((f) => f.endsWith(".css"));
   const cssHref = cssFile ? `/assets/${cssFile}` : null;
-  console.log("  cssFile    :", cssHref ?? "(none)");
+  console.log("  cssFile    :", cssHref ?? "(none — CSS may be inlined)");
 
   // ── 3. Generate index.html ──────────────────────────────────────────────────
   const html = `<!DOCTYPE html>
