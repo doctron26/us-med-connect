@@ -64,6 +64,11 @@ async function main() {
   console.log("  cssFile    :", cssHref ?? "(none — CSS may be inlined)");
 
   // ── 3. Generate index.html ──────────────────────────────────────────────────
+  // TanStack Start's client entry expects window.$_TSR to exist for the
+  // hydration handshake. This script is normally injected by the SSR server.
+  // Since we serve static HTML, we embed it and immediately mark stream as ended.
+  const tsrBootstrap = `self.$_TSR={h(){this.hydrated=!0,this.c()},e(){this.streamEnded=!0,this.c()},c(){this.hydrated&&this.streamEnded&&(delete self.$_TSR,delete self.$R?.tsr)},p(e){this.initialized?e():this.buffer.push(e)},buffer:[]};self.$_TSR.e();`;
+
   const html = `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -76,6 +81,7 @@ async function main() {
   </head>
   <body>
     <div id="root"></div>
+    <script>${tsrBootstrap}</script>
     <script type="module" crossorigin src="${clientEntry}"></script>
   </body>
 </html>
