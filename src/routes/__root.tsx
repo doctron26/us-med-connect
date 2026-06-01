@@ -81,6 +81,8 @@ function RootComponent() {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>US Med Connect</title>
+        <link rel="icon" type="image/png" href="/logo.png" />
+        <meta property="og:image" content="/logo.png" />
         <HeadContent />
       </head>
       <body>

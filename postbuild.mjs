@@ -76,6 +76,8 @@ async function main() {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>US Med Connect</title>
     <meta name="description" content="US Med Connect - Your trusted platform for US medical travel connections" />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <meta property="og:image" content="/logo.png" />
     ${cssHref ? `<link rel="stylesheet" crossorigin href="${cssHref}">` : ""}
     <link rel="modulepreload" crossorigin href="${clientEntry}">
   </head>
