@@ -62,15 +62,37 @@ type PartnershipApplication = {
   compliance_confirmed: boolean;
 };
 
-type Tab = "inquiries" | "partnerships";
+type SecondOpinionRequest = {
+  id: string;
+  created_at: string;
+  full_name: string;
+  country: string;
+  age: string;
+  gender: string;
+  email: string;
+  whatsapp: string;
+  primary_diagnosis: string;
+  hospital_treating: string;
+  treating_doctor: string;
+  seeking: string[];
+  preferred_specialty: string;
+  additional_questions: string;
+  consent_share: boolean;
+  consent_platform: boolean;
+  file_url: string | null;
+};
+
+type Tab = "inquiries" | "partnerships" | "second_opinions";
 
 function DashboardPage() {
   const [activeTab, setActiveTab] = useState<Tab>("inquiries");
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [partnerships, setPartnerships] = useState<PartnershipApplication[]>([]);
+  const [secondOpinions, setSecondOpinions] = useState<SecondOpinionRequest[]>([]);
 
   const [filteredInquiries, setFilteredInquiries] = useState<Inquiry[]>([]);
   const [filteredPartnerships, setFilteredPartnerships] = useState<PartnershipApplication[]>([]);
+  const [filteredSecondOpinions, setFilteredSecondOpinions] = useState<SecondOpinionRequest[]>([]);
 
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -101,6 +123,17 @@ function DashboardPage() {
       if (!partErr && partData) {
         setPartnerships(partData as PartnershipApplication[]);
         setFilteredPartnerships(partData as PartnershipApplication[]);
+      }
+
+      // 3. Fetch Second Opinions
+      const { data: soData, error: soErr } = await supabaseAdmin
+        .from("second_opinion_requests")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (!soErr && soData) {
+        setSecondOpinions(soData as SecondOpinionRequest[]);
+        setFilteredSecondOpinions(soData as SecondOpinionRequest[]);
       }
     } catch (err) {
       console.error("Error loading admin dashboard datasets:", err);
@@ -136,8 +169,18 @@ function DashboardPage() {
           i.hospital_type.toLowerCase().includes(q)
       );
       setFilteredPartnerships(result);
+    } else if (activeTab === "second_opinions") {
+      const result = secondOpinions.filter(
+        (i) =>
+          i.full_name.toLowerCase().includes(q) ||
+          i.email.toLowerCase().includes(q) ||
+          i.country.toLowerCase().includes(q) ||
+          i.primary_diagnosis.toLowerCase().includes(q) ||
+          i.preferred_specialty.toLowerCase().includes(q)
+      );
+      setFilteredSecondOpinions(result);
     }
-  }, [search, inquiries, partnerships, activeTab]);
+  }, [search, inquiries, partnerships, secondOpinions, activeTab]);
 
   const handleSort = (key: string) => {
     if (sortKey === key) {
@@ -155,10 +198,16 @@ function DashboardPage() {
         const bv = (b[sortKey as keyof Inquiry] ?? "").toString();
         return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
       });
-    } else {
+    } else if (activeTab === "partnerships") {
       return [...filteredPartnerships].sort((a, b) => {
         const av = (a[sortKey as keyof PartnershipApplication] ?? "").toString();
         const bv = (b[sortKey as keyof PartnershipApplication] ?? "").toString();
+        return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
+      });
+    } else {
+      return [...filteredSecondOpinions].sort((a, b) => {
+        const av = (a[sortKey as keyof SecondOpinionRequest] ?? "").toString();
+        const bv = (b[sortKey as keyof SecondOpinionRequest] ?? "").toString();
         return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
       });
     }
@@ -175,7 +224,7 @@ function DashboardPage() {
       <ChevronDown className="size-3.5 text-white/20" />
     );
 
-  const activeLabel = activeTab === "inquiries" ? "Inquiries" : "Partnerships";
+  const activeLabel = activeTab === "inquiries" ? "Inquiries" : activeTab === "partnerships" ? "Partnerships" : "Second Opinions";
   const sortedData = getSortedData();
 
   return (
@@ -200,10 +249,11 @@ function DashboardPage() {
       </div>
 
       {/* Tabs Selector */}
-      <div className="flex gap-2 p-1.5 bg-white/[0.03] border border-white/[0.06] rounded-2xl mb-8 max-w-sm">
+      <div className="flex gap-2 p-1.5 bg-white/[0.03] border border-white/[0.06] rounded-2xl mb-8 max-w-2xl">
         {[
           { id: "inquiries", label: "Inquiries", count: inquiries.length, icon: Inbox },
           { id: "partnerships", label: "Partnerships", count: partnerships.length, icon: Building2 },
+          { id: "second_opinions", label: "Second Opinions", count: secondOpinions.length, icon: Stethoscope },
         ].map((tab) => {
           const Icon = tab.icon;
           return (
@@ -523,6 +573,138 @@ function DashboardPage() {
                                   <div className="flex items-center gap-1.5 text-xs text-teal-400 bg-teal-400/5 px-3 py-2 rounded-lg border border-teal-400/10 w-fit select-none">
                                     <CheckCircle2 className="size-4 shrink-0" />
                                     <span>Institutional Clinical Compliance Agreement Signed & Audited Successfully</span>
+                                  </div>
+                                </td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+
+            {/* 3. SECOND OPINIONS TAB */}
+            {activeTab === "second_opinions" && (
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-white/[0.06] bg-white/[0.01]">
+                    <th onClick={() => handleSort("created_at")} className="px-6 py-4 text-left text-[11px] font-bold uppercase tracking-wider text-white/30 hover:text-white/60 cursor-pointer select-none">
+                      <span className="inline-flex items-center gap-1.5">Date <SortIcon col="created_at" /></span>
+                    </th>
+                    <th onClick={() => handleSort("full_name")} className="px-6 py-4 text-left text-[11px] font-bold uppercase tracking-wider text-white/30 hover:text-white/60 cursor-pointer select-none">
+                      <span className="inline-flex items-center gap-1.5">Patient <SortIcon col="full_name" /></span>
+                    </th>
+                    <th onClick={() => handleSort("country")} className="px-6 py-4 text-left text-[11px] font-bold uppercase tracking-wider text-white/30 hover:text-white/60 cursor-pointer select-none">
+                      <span className="inline-flex items-center gap-1.5">Country <SortIcon col="country" /></span>
+                    </th>
+                    <th onClick={() => handleSort("primary_diagnosis")} className="px-6 py-4 text-left text-[11px] font-bold uppercase tracking-wider text-white/30 hover:text-white/60 cursor-pointer select-none">
+                      <span className="inline-flex items-center gap-1.5">Diagnosis <SortIcon col="primary_diagnosis" /></span>
+                    </th>
+                    <th onClick={() => handleSort("preferred_specialty")} className="px-6 py-4 text-left text-[11px] font-bold uppercase tracking-wider text-white/30 hover:text-white/60 cursor-pointer select-none">
+                      <span className="inline-flex items-center gap-1.5">Specialty <SortIcon col="preferred_specialty" /></span>
+                    </th>
+                    <th className="px-6 py-4 text-left text-[11px] font-bold uppercase tracking-wider text-white/30">Contact</th>
+                    <th className="px-6 py-4 text-left text-[11px] font-bold uppercase tracking-wider text-white/30">Document</th>
+                    <th className="px-6 py-4 text-left text-[11px] font-bold uppercase tracking-wider text-white/30">Details</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/[0.04]">
+                  {(sortedData as SecondOpinionRequest[]).map((so) => (
+                    <tr key={so.id} className="hover:bg-white/[0.015] transition-colors border-b border-white/[0.04]">
+                      <td colSpan={8} className="p-0">
+                        <table className="w-full text-sm">
+                          <tbody>
+                            <tr>
+                              <td className="px-6 py-4 text-white/50 whitespace-nowrap w-[13%]">
+                                {format(new Date(so.created_at), "dd MMM yyyy")}
+                                <div className="text-[11px] text-white/25 mt-0.5">
+                                  {format(new Date(so.created_at), "HH:mm")}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 font-semibold text-white whitespace-nowrap w-[16%]">
+                                {so.full_name}
+                                <div className="text-[10px] text-white/35 mt-0.5 font-normal">
+                                  {so.age && `Age ${so.age}`}{so.gender && ` · ${so.gender}`}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 text-white/60 w-[12%]">{so.country}</td>
+                              <td className="px-6 py-4 w-[18%]">
+                                <div className="text-xs text-white/80 font-medium leading-snug">{so.primary_diagnosis}</div>
+                                <div className="text-[10px] text-white/35 mt-0.5">{so.hospital_treating}</div>
+                              </td>
+                              <td className="px-6 py-4 w-[15%]">
+                                <span className="inline-block px-2.5 py-1 rounded-full bg-teal-400/10 text-teal-400 text-xs font-semibold">
+                                  {so.preferred_specialty}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 text-white/50 w-[14%]">
+                                <div className="text-xs font-medium">{so.email}</div>
+                                <div className="text-xs text-white/30 mt-0.5">{so.whatsapp}</div>
+                              </td>
+                              <td className="px-6 py-4 w-[10%]">
+                                {so.file_url ? (
+                                  <a
+                                    href={so.file_url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 text-xs font-semibold hover:bg-cyan-500/20 transition-colors"
+                                  >
+                                    <ExternalLink className="size-3.5" /> View Scan
+                                  </a>
+                                ) : (
+                                  <span className="text-xs text-white/20 font-mono">—</span>
+                                )}
+                              </td>
+                              <td className="px-6 py-4 w-[8%]">
+                                <button
+                                  onClick={() => setExpanded(expanded === so.id ? null : so.id)}
+                                  className="text-xs text-teal-400/80 hover:text-teal-300 font-semibold transition-colors underline underline-offset-4"
+                                >
+                                  {expanded === so.id ? "Hide" : "Open"}
+                                </button>
+                              </td>
+                            </tr>
+                            {expanded === so.id && (
+                              <tr className="bg-white/[0.01] border-t border-white/[0.04]">
+                                <td colSpan={8} className="px-8 py-6 space-y-5">
+                                  <div className="grid md:grid-cols-2 gap-8">
+                                    <div className="space-y-4">
+                                      <div>
+                                        <div className="text-[11px] text-white/30 uppercase tracking-widest font-bold mb-2 flex items-center gap-1">
+                                          <Stethoscope className="size-3.5 text-teal-400" /> Seeking Opinion On
+                                        </div>
+                                        <div className="flex flex-wrap gap-1.5">
+                                          {so.seeking && so.seeking.length > 0 ? (
+                                            so.seeking.map((s) => (
+                                              <span key={s} className="px-2 py-0.5 rounded bg-teal-400/10 border border-teal-400/15 text-[10px] text-teal-300">
+                                                ✓ {s}
+                                              </span>
+                                            ))
+                                          ) : (
+                                            <span className="text-xs text-white/35">Not specified</span>
+                                          )}
+                                        </div>
+                                      </div>
+                                      <div>
+                                        <div className="text-[11px] text-white/30 uppercase tracking-widest font-bold mb-1">Treating Doctor</div>
+                                        <div className="text-xs text-white/70">{so.treating_doctor || "—"}</div>
+                                      </div>
+                                    </div>
+                                    <div className="space-y-4">
+                                      <div>
+                                        <div className="text-[11px] text-white/30 uppercase tracking-widest font-bold mb-1">Additional Questions</div>
+                                        <p className="text-xs text-white/70 leading-relaxed bg-[#060a13] p-3 rounded-xl border border-white/[0.04] whitespace-pre-wrap h-24 overflow-y-auto font-sans">
+                                          {so.additional_questions || "No additional questions submitted."}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-1.5 text-xs text-teal-400 bg-teal-400/5 px-3 py-2 rounded-lg border border-teal-400/10 w-fit select-none">
+                                    <CheckCircle2 className="size-4 shrink-0" />
+                                    <span>Patient Consent Authorized · Records Sharing Approved</span>
                                   </div>
                                 </td>
                               </tr>

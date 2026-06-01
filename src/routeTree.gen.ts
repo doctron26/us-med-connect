@@ -9,17 +9,25 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SecondOpinionRouteImport } from './routes/second-opinion'
 import { Route as PartnershipsRouteImport } from './routes/partnerships'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SecondOpinionIndexRouteImport } from './routes/second-opinion.index'
 import { Route as PartnershipsIndexRouteImport } from './routes/partnerships.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as SecondOpinionApplyRouteImport } from './routes/second-opinion.apply'
 import { Route as PartnershipsApplyRouteImport } from './routes/partnerships.apply'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminAuthenticatedRouteImport } from './routes/admin/_authenticated'
 import { Route as AdminAuthenticatedPricingRouteImport } from './routes/admin/_authenticated/pricing'
 import { Route as AdminAuthenticatedDashboardRouteImport } from './routes/admin/_authenticated/dashboard'
 
+const SecondOpinionRoute = SecondOpinionRouteImport.update({
+  id: '/second-opinion',
+  path: '/second-opinion',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PartnershipsRoute = PartnershipsRouteImport.update({
   id: '/partnerships',
   path: '/partnerships',
@@ -35,6 +43,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SecondOpinionIndexRoute = SecondOpinionIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SecondOpinionRoute,
+} as any)
 const PartnershipsIndexRoute = PartnershipsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -44,6 +57,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
+} as any)
+const SecondOpinionApplyRoute = SecondOpinionApplyRouteImport.update({
+  id: '/apply',
+  path: '/apply',
+  getParentRoute: () => SecondOpinionRoute,
 } as any)
 const PartnershipsApplyRoute = PartnershipsApplyRouteImport.update({
   id: '/apply',
@@ -76,10 +94,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/partnerships': typeof PartnershipsRouteWithChildren
+  '/second-opinion': typeof SecondOpinionRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/partnerships/apply': typeof PartnershipsApplyRoute
+  '/second-opinion/apply': typeof SecondOpinionApplyRoute
   '/admin/': typeof AdminIndexRoute
   '/partnerships/': typeof PartnershipsIndexRoute
+  '/second-opinion/': typeof SecondOpinionIndexRoute
   '/admin/dashboard': typeof AdminAuthenticatedDashboardRoute
   '/admin/pricing': typeof AdminAuthenticatedPricingRoute
 }
@@ -88,7 +109,9 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/admin/login': typeof AdminLoginRoute
   '/partnerships/apply': typeof PartnershipsApplyRoute
+  '/second-opinion/apply': typeof SecondOpinionApplyRoute
   '/partnerships': typeof PartnershipsIndexRoute
+  '/second-opinion': typeof SecondOpinionIndexRoute
   '/admin/dashboard': typeof AdminAuthenticatedDashboardRoute
   '/admin/pricing': typeof AdminAuthenticatedPricingRoute
 }
@@ -97,11 +120,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/partnerships': typeof PartnershipsRouteWithChildren
+  '/second-opinion': typeof SecondOpinionRouteWithChildren
   '/admin/_authenticated': typeof AdminAuthenticatedRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/partnerships/apply': typeof PartnershipsApplyRoute
+  '/second-opinion/apply': typeof SecondOpinionApplyRoute
   '/admin/': typeof AdminIndexRoute
   '/partnerships/': typeof PartnershipsIndexRoute
+  '/second-opinion/': typeof SecondOpinionIndexRoute
   '/admin/_authenticated/dashboard': typeof AdminAuthenticatedDashboardRoute
   '/admin/_authenticated/pricing': typeof AdminAuthenticatedPricingRoute
 }
@@ -111,10 +137,13 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/partnerships'
+    | '/second-opinion'
     | '/admin/login'
     | '/partnerships/apply'
+    | '/second-opinion/apply'
     | '/admin/'
     | '/partnerships/'
+    | '/second-opinion/'
     | '/admin/dashboard'
     | '/admin/pricing'
   fileRoutesByTo: FileRoutesByTo
@@ -123,7 +152,9 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/login'
     | '/partnerships/apply'
+    | '/second-opinion/apply'
     | '/partnerships'
+    | '/second-opinion'
     | '/admin/dashboard'
     | '/admin/pricing'
   id:
@@ -131,11 +162,14 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/partnerships'
+    | '/second-opinion'
     | '/admin/_authenticated'
     | '/admin/login'
     | '/partnerships/apply'
+    | '/second-opinion/apply'
     | '/admin/'
     | '/partnerships/'
+    | '/second-opinion/'
     | '/admin/_authenticated/dashboard'
     | '/admin/_authenticated/pricing'
   fileRoutesById: FileRoutesById
@@ -144,10 +178,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   PartnershipsRoute: typeof PartnershipsRouteWithChildren
+  SecondOpinionRoute: typeof SecondOpinionRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/second-opinion': {
+      id: '/second-opinion'
+      path: '/second-opinion'
+      fullPath: '/second-opinion'
+      preLoaderRoute: typeof SecondOpinionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/partnerships': {
       id: '/partnerships'
       path: '/partnerships'
@@ -169,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/second-opinion/': {
+      id: '/second-opinion/'
+      path: '/'
+      fullPath: '/second-opinion/'
+      preLoaderRoute: typeof SecondOpinionIndexRouteImport
+      parentRoute: typeof SecondOpinionRoute
+    }
     '/partnerships/': {
       id: '/partnerships/'
       path: '/'
@@ -182,6 +231,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/second-opinion/apply': {
+      id: '/second-opinion/apply'
+      path: '/apply'
+      fullPath: '/second-opinion/apply'
+      preLoaderRoute: typeof SecondOpinionApplyRouteImport
+      parentRoute: typeof SecondOpinionRoute
     }
     '/partnerships/apply': {
       id: '/partnerships/apply'
@@ -262,10 +318,25 @@ const PartnershipsRouteWithChildren = PartnershipsRoute._addFileChildren(
   PartnershipsRouteChildren,
 )
 
+interface SecondOpinionRouteChildren {
+  SecondOpinionApplyRoute: typeof SecondOpinionApplyRoute
+  SecondOpinionIndexRoute: typeof SecondOpinionIndexRoute
+}
+
+const SecondOpinionRouteChildren: SecondOpinionRouteChildren = {
+  SecondOpinionApplyRoute: SecondOpinionApplyRoute,
+  SecondOpinionIndexRoute: SecondOpinionIndexRoute,
+}
+
+const SecondOpinionRouteWithChildren = SecondOpinionRoute._addFileChildren(
+  SecondOpinionRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   PartnershipsRoute: PartnershipsRouteWithChildren,
+  SecondOpinionRoute: SecondOpinionRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

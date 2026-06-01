@@ -10,6 +10,7 @@ const links = [
   { href: "/#hospitals", label: "Hospitals", isRouter: false },
   { href: "/#how", label: "How It Works", isRouter: false },
   { href: "/partnerships", label: "Partnerships", isRouter: true },
+  { href: "/second-opinion", label: "Second Opinion", isRouter: true },
   { href: "/#contact", label: "Contact", isRouter: false },
 ];
 
