@@ -465,13 +465,13 @@ function SecondOpinionApplyPage() {
                       name="preferred_specialty"
                       value={formData.preferred_specialty}
                       onChange={handleTextChange}
-                      className="w-full px-4 py-3 rounded-xl bg-white/[0.06] border border-white/[0.08] text-white text-sm focus:outline-none focus:border-teal transition-all"
+                      className="w-full px-4 py-3 rounded-xl bg-[#0d1527] border border-white/[0.08] text-white text-sm focus:outline-none focus:border-teal transition-all"
                     >
-                      <option value="" disabled className="text-navy-deep bg-navy-deep">
+                      <option value="" disabled className="text-white bg-[#0d1527]">
                         Select the specialty you'd like reviewed
                       </option>
                       {specialtiesList.map((s) => (
-                        <option key={s} value={s} className="text-navy-deep bg-navy-deep">
+                        <option key={s} value={s} className="text-white bg-[#0d1527]">
                           {s}
                         </option>
                       ))}
