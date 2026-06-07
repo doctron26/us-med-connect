@@ -90,12 +90,17 @@ export function Hospitals() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {hospitals.map((h, i) => (
             <Reveal key={h.name} delay={i * 50}>
-              <div className="group h-full rounded-2xl p-5 bg-card border border-border hover-lift transition-all hover:border-sky/40 relative overflow-hidden">
+              <a
+                href={`https://${h.domain}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block group h-full rounded-2xl p-5 bg-card border border-border hover-lift transition-all hover:border-sky/40 relative overflow-hidden"
+              >
                 <div className="absolute inset-0 bg-gradient-to-br from-sky/0 to-sky/0 group-hover:from-sky/[0.04] group-hover:to-teal/[0.04] transition-colors" />
                 <div className="relative flex items-start gap-3">
                   <LogoBadge h={h} />
                   <div className="flex-1 min-w-0">
-                    <div className="font-display font-semibold text-navy-deep leading-tight">{h.name}</div>
+                    <div className="font-display font-semibold text-navy-deep leading-tight group-hover:text-sky transition-colors">{h.name}</div>
                     <div className="text-[11px] text-muted-foreground mt-0.5">{h.location}</div>
                   </div>
                 </div>
@@ -104,7 +109,7 @@ export function Hospitals() {
                   <span className="inline-flex items-center gap-1"><ShieldCheck className="size-3 text-sky" /> Verified network</span>
                   <span className="inline-flex items-center gap-1"><Star className="size-3 text-teal" /> Top-ranked</span>
                 </div>
-              </div>
+              </a>
             </Reveal>
           ))}
         </div>

@@ -34,9 +34,10 @@ export function Specialities() {
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {items.map((s) => (
-            <div
+            <a
               key={s.name}
-              className="group rounded-2xl p-5 bg-card border border-border hover-lift cursor-pointer"
+              href="/#contact"
+              className="group rounded-2xl p-5 bg-card border border-border hover-lift cursor-pointer block"
             >
               <div className="text-2xl">{s.icon}</div>
               <div className="mt-3 font-display font-semibold text-navy-deep">{s.name}</div>
@@ -44,7 +45,7 @@ export function Specialities() {
               <div className="mt-3 text-xs font-semibold text-sky opacity-0 group-hover:opacity-100 transition">
                 Request opinion →
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>

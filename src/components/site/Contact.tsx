@@ -104,9 +104,6 @@ export function Contact() {
               <div>
                 <div className="text-xs text-white/60">Email</div>
                 <div className="font-display font-semibold">travel@usamedtravel.com</div>
-                <div className="text-xs text-white/60 mt-0.5">
-                  care · secondopinion · international · partnerships @usamedtravel.com
-                </div>
               </div>
             </a>
             <div className="flex items-center gap-4 glass-dark p-4 rounded-2xl border border-white/10">
