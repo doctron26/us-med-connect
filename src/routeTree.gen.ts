@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SecondOpinionRouteImport } from './routes/second-opinion'
 import { Route as PartnershipsRouteImport } from './routes/partnerships'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SecondOpinionIndexRouteImport } from './routes/second-opinion.index'
@@ -18,10 +19,12 @@ import { Route as PartnershipsIndexRouteImport } from './routes/partnerships.ind
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as SecondOpinionApplyRouteImport } from './routes/second-opinion.apply'
 import { Route as PartnershipsApplyRouteImport } from './routes/partnerships.apply'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminAuthenticatedRouteImport } from './routes/admin/_authenticated'
 import { Route as AdminAuthenticatedPricingRouteImport } from './routes/admin/_authenticated/pricing'
 import { Route as AdminAuthenticatedDashboardRouteImport } from './routes/admin/_authenticated/dashboard'
+import { Route as AdminAuthenticatedBlogsRouteImport } from './routes/admin/_authenticated/blogs'
 
 const SecondOpinionRoute = SecondOpinionRouteImport.update({
   id: '/second-opinion',
@@ -31,6 +34,11 @@ const SecondOpinionRoute = SecondOpinionRouteImport.update({
 const PartnershipsRoute = PartnershipsRouteImport.update({
   id: '/partnerships',
   path: '/partnerships',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -68,6 +76,11 @@ const PartnershipsApplyRoute = PartnershipsApplyRouteImport.update({
   path: '/apply',
   getParentRoute: () => PartnershipsRoute,
 } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -89,29 +102,40 @@ const AdminAuthenticatedDashboardRoute =
     path: '/dashboard',
     getParentRoute: () => AdminAuthenticatedRoute,
   } as any)
+const AdminAuthenticatedBlogsRoute = AdminAuthenticatedBlogsRouteImport.update({
+  id: '/blogs',
+  path: '/blogs',
+  getParentRoute: () => AdminAuthenticatedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/blog': typeof BlogRouteWithChildren
   '/partnerships': typeof PartnershipsRouteWithChildren
   '/second-opinion': typeof SecondOpinionRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/partnerships/apply': typeof PartnershipsApplyRoute
   '/second-opinion/apply': typeof SecondOpinionApplyRoute
   '/admin/': typeof AdminIndexRoute
   '/partnerships/': typeof PartnershipsIndexRoute
   '/second-opinion/': typeof SecondOpinionIndexRoute
+  '/admin/blogs': typeof AdminAuthenticatedBlogsRoute
   '/admin/dashboard': typeof AdminAuthenticatedDashboardRoute
   '/admin/pricing': typeof AdminAuthenticatedPricingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/blog': typeof BlogRouteWithChildren
   '/admin': typeof AdminIndexRoute
   '/admin/login': typeof AdminLoginRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/partnerships/apply': typeof PartnershipsApplyRoute
   '/second-opinion/apply': typeof SecondOpinionApplyRoute
   '/partnerships': typeof PartnershipsIndexRoute
   '/second-opinion': typeof SecondOpinionIndexRoute
+  '/admin/blogs': typeof AdminAuthenticatedBlogsRoute
   '/admin/dashboard': typeof AdminAuthenticatedDashboardRoute
   '/admin/pricing': typeof AdminAuthenticatedPricingRoute
 }
@@ -119,15 +143,18 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/blog': typeof BlogRouteWithChildren
   '/partnerships': typeof PartnershipsRouteWithChildren
   '/second-opinion': typeof SecondOpinionRouteWithChildren
   '/admin/_authenticated': typeof AdminAuthenticatedRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/partnerships/apply': typeof PartnershipsApplyRoute
   '/second-opinion/apply': typeof SecondOpinionApplyRoute
   '/admin/': typeof AdminIndexRoute
   '/partnerships/': typeof PartnershipsIndexRoute
   '/second-opinion/': typeof SecondOpinionIndexRoute
+  '/admin/_authenticated/blogs': typeof AdminAuthenticatedBlogsRoute
   '/admin/_authenticated/dashboard': typeof AdminAuthenticatedDashboardRoute
   '/admin/_authenticated/pricing': typeof AdminAuthenticatedPricingRoute
 }
@@ -136,40 +163,49 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/blog'
     | '/partnerships'
     | '/second-opinion'
     | '/admin/login'
+    | '/blog/$slug'
     | '/partnerships/apply'
     | '/second-opinion/apply'
     | '/admin/'
     | '/partnerships/'
     | '/second-opinion/'
+    | '/admin/blogs'
     | '/admin/dashboard'
     | '/admin/pricing'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/blog'
     | '/admin'
     | '/admin/login'
+    | '/blog/$slug'
     | '/partnerships/apply'
     | '/second-opinion/apply'
     | '/partnerships'
     | '/second-opinion'
+    | '/admin/blogs'
     | '/admin/dashboard'
     | '/admin/pricing'
   id:
     | '__root__'
     | '/'
     | '/admin'
+    | '/blog'
     | '/partnerships'
     | '/second-opinion'
     | '/admin/_authenticated'
     | '/admin/login'
+    | '/blog/$slug'
     | '/partnerships/apply'
     | '/second-opinion/apply'
     | '/admin/'
     | '/partnerships/'
     | '/second-opinion/'
+    | '/admin/_authenticated/blogs'
     | '/admin/_authenticated/dashboard'
     | '/admin/_authenticated/pricing'
   fileRoutesById: FileRoutesById
@@ -177,6 +213,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  BlogRoute: typeof BlogRouteWithChildren
   PartnershipsRoute: typeof PartnershipsRouteWithChildren
   SecondOpinionRoute: typeof SecondOpinionRouteWithChildren
 }
@@ -195,6 +232,13 @@ declare module '@tanstack/react-router' {
       path: '/partnerships'
       fullPath: '/partnerships'
       preLoaderRoute: typeof PartnershipsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -246,6 +290,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PartnershipsApplyRouteImport
       parentRoute: typeof PartnershipsRoute
     }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/login'
@@ -274,15 +325,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAuthenticatedDashboardRouteImport
       parentRoute: typeof AdminAuthenticatedRoute
     }
+    '/admin/_authenticated/blogs': {
+      id: '/admin/_authenticated/blogs'
+      path: '/blogs'
+      fullPath: '/admin/blogs'
+      preLoaderRoute: typeof AdminAuthenticatedBlogsRouteImport
+      parentRoute: typeof AdminAuthenticatedRoute
+    }
   }
 }
 
 interface AdminAuthenticatedRouteChildren {
+  AdminAuthenticatedBlogsRoute: typeof AdminAuthenticatedBlogsRoute
   AdminAuthenticatedDashboardRoute: typeof AdminAuthenticatedDashboardRoute
   AdminAuthenticatedPricingRoute: typeof AdminAuthenticatedPricingRoute
 }
 
 const AdminAuthenticatedRouteChildren: AdminAuthenticatedRouteChildren = {
+  AdminAuthenticatedBlogsRoute: AdminAuthenticatedBlogsRoute,
   AdminAuthenticatedDashboardRoute: AdminAuthenticatedDashboardRoute,
   AdminAuthenticatedPricingRoute: AdminAuthenticatedPricingRoute,
 }
@@ -303,6 +363,16 @@ const AdminRouteChildren: AdminRouteChildren = {
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 interface PartnershipsRouteChildren {
   PartnershipsApplyRoute: typeof PartnershipsApplyRoute
@@ -335,6 +405,7 @@ const SecondOpinionRouteWithChildren = SecondOpinionRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  BlogRoute: BlogRouteWithChildren,
   PartnershipsRoute: PartnershipsRouteWithChildren,
   SecondOpinionRoute: SecondOpinionRouteWithChildren,
 }

@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, redirect, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LayoutDashboard, DollarSign, LogOut, Activity } from "lucide-react";
+import { LayoutDashboard, DollarSign, LogOut, Activity, FileText } from "lucide-react";
 import { supabaseAdmin, isAdminUser } from "@/lib/supabase-admin";
 
 // ─── Route guard: fires ONLY for children of this layout ──────────────────────
@@ -42,6 +42,7 @@ function AuthenticatedLayout() {
   const navItems = [
     { to: "/admin/dashboard" as const, label: "Inquiries", icon: LayoutDashboard },
     { to: "/admin/pricing" as const, label: "Pricing", icon: DollarSign },
+    { to: "/admin/blogs" as const, label: "Blogs", icon: FileText },
   ];
 
   return (

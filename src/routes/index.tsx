@@ -13,6 +13,7 @@ import { Testimonials } from "@/components/site/Testimonials";
 import { Pricing } from "@/components/site/Pricing";
 import { FAQ } from "@/components/site/FAQ";
 import { Contact } from "@/components/site/Contact";
+import { BlogPreview } from "@/components/site/BlogPreview";
 import { Footer } from "@/components/site/Footer";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
 
@@ -61,6 +62,7 @@ function Index() {
         <Testimonials />
         <Pricing />
         <FAQ />
+        <BlogPreview />
         <Contact />
       </main>
       <Footer />
